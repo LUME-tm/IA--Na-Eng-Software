@@ -1,6 +1,6 @@
-# Análise de Código Java utilizando LLMs
+# Análise de Código Java utilizando modelos locais
 
-## 1.
+# 1.
 
 modelos utilizados foram:
 
