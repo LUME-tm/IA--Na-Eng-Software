@@ -1,0 +1,125 @@
+deepseek-coder
+1
+from ollama import chat
+
+cod="""
+public double calculateAverage(List<Integer> grades) {
+    int sum = 0;
+    for (Integer grade : grades) {
+        sum += grade;
+    }
+    return sum / grades.size();
+}
+"""
+response = chat(
+    model='deepseek-coder',
+    messages=[{'role': 'user', 'content': 
+    f"""
+
+    Gerar testes automatizados
+    {cod}
+    """}],
+)
+print(response.message.content)
+Para gerar testes automatizados para este método de cálculo da média, você pode usar um framework como JUnit. Abaixo está um exemplo do que você pode fazer:
+
+```java
+import org.junit.*;
+import java.util.*;
+import static org.junit.Assert.*;
+
+public class CalculateAverageTest {
+
+    @Test
+    public void testCalculateAverage() {
+        CalculateAverage calc = new CalculateAverage();
+
+        // Teste com um vetor sem elementos
+        assertThrows(ArithmeticException.class, () -> calc.calculateAverage(new ArrayList<>()));
+
+        // Teste com um vetor com apenas um elemento
+        assertEquals(5, calc.calculateAverage(Arrays.asList(5)), 0.001);
+
+        // Teste com um vetor com mais de um elemento
+        assertEquals(10, calc.calculateAverage(Arrays.asList(1, 2, 3, 4, 5)), 0.001);
+   
+        // Teste com um vetor com elementos negativos
+        assertEquals(-3, calc.calculateAverage(Arrays.asList(-1, -2, -3, -4, -5)), 0.001);
+    }
+}
+```
+
+Neste exemplo, estou testando a média com um vetor vazio (como você sabe que a média de um vetor vazio deve dar `ArithmeticException`), um vetor com um único elemento (verificando que o resultado é o mesmo), um vetor com vários elementos (verificando que o resultado é o mesmo), e um vetor com elementos negativos (verificando que o resultado é o mesmo). Todos esses testes são feitos com o método `assertEquals`, que verifica se o resultado é o mesmo que o esperado. E `assertThrows`, que verifica se o método lança uma exceção dado um dos argumentos.
+
+Por fim, o valor `0.001` é um limiar de diferença para `assertEquals`. Se a diferença for menor que esse valor, `assertEquals` não considera a diferença como uma diferença forte e simplesmente considera a diferença.
+
+2
+
+from ollama import chat
+
+cod="""
+public double calculateAverage(List<Integer> grades) {
+    int sum = 0;
+    for (Integer grade : grades) {
+        sum += grade;
+    }
+    return sum / grades.size();
+}
+"""
+response = chat(
+    model='deepseek-coder',
+    messages=[{'role': 'user', 'content': 
+    f"""
+
+    Gerar documentação
+    {cod}
+    """}],
+)
+print(response.message.content)
+Aqui está a documentação em Markdown:
+
+```markdown
+# Método `calculateAverage`
+
+Esse método faz a seguinte coisa:
+
+- Calcula a média aritmética de uma lista de notas.
+- A lista de notas é passada por parâmetro na chamada do método.
+- A média aritmética é calculada somando todos os valores das notas e dividindo pela quantidade de notas (sendo esse valor a média aritmética).
+- O método retorna o valor calculado.
+
+### Parâmetros
+
+- `List<Integer> grades`: É uma lista de inteiros. Essa lista de notas será utilizada para calcular a média aritmética.
+
+### Retorno
+
+- `double`: O método retorna um valor do tipo `double`. Esse valor é a média aritmética da lista de notas.
+
+### Exemplos
+
+```markdown
+// Exemplo 1
+List<Integer> grades = new ArrayList<>();
+grades.add(85);
+grades.add(90);
+grades.add(78);
+System.out.println(calculateAverage(grades)); // Exibirá a média aritmética
+
+// Exemplo 2
+List<Integer> grades = new ArrayList<>();
+grades.add(92);
+grades.add(95);
+grades.add(88);
+System.out.println(calculateAverage(grades)); // Exibirá a média aritmética
+```
+
+Este método pode ser chamado de qualquer lugar na sua aplicação Java onde haja necessidade de calcular a média aritmética de uma lista de notas.
+
+### Descrição da classe
+
+A classe que implementa esse método não possui características específicas nem visíveis. Portanto, não há necessidade de documentar essa classe.
+
+### Detalhes
+
+Nenhum detalhe específico foi fornecido na documentação para a classe `calculateAverage`.
