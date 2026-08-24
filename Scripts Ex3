@@ -123,3 +123,261 @@ A classe que implementa esse método não possui características específicas n
 ### Detalhes
 
 Nenhum detalhe específico foi fornecido na documentação para a classe `calculateAverage`.
+
+qwen3-coder
+1
+from ollama import chat
+
+cod="""
+public double calculateAverage(List<Integer> grades) {
+    int sum = 0;
+    for (Integer grade : grades) {
+        sum += grade;
+    }
+    return sum / grades.size();
+}
+"""
+response = chat(
+    model='qwen3-coder',
+    messages=[{'role': 'user', 'content': 
+    f"""
+
+    Gerar testes automatizados
+    {cod}
+    """}],
+)
+print(response.message.content)
+Aqui estão os testes automatizados para o método `calculateAverage`:
+
+```java
+import org.junit.jupiter.api.Test;
+import static org.junit.jupiter.api.Assertions.*;
+import java.util.Arrays;
+import java.util.List;
+
+public class AverageCalculatorTest {
+
+    @Test
+    public void testCalculateAverageWithValidGrades() {
+        // Given
+        List<Integer> grades = Arrays.asList(85, 90, 78, 92, 88);
+        double expected = 86.6;
+
+        // When
+        double result = calculateAverage(grades);
+
+        // Then
+        assertEquals(expected, result, 0.1, "A média deve ser calculada corretamente");
+    }
+
+    @Test
+    public void testCalculateAverageWithSingleGrade() {
+        // Given
+        List<Integer> grades = Arrays.asList(95);
+        double expected = 95.0;
+
+        // When
+        double result = calculateAverage(grades);
+
+        // Then
+        assertEquals(expected, result, 0.1, "A média de uma única nota deve ser a própria nota");
+    }
+
+    @Test
+    public void testCalculateAverageWithZeroGrades() {
+        // Given
+        List<Integer> grades = Arrays.asList(0, 0, 0);
+        double expected = 0.0;
+
+        // When
+        double result = calculateAverage(grades);
+
+        // Then
+        assertEquals(expected, result, 0.1, "A média de notas zero deve ser zero");
+    }
+
+    @Test
+    public void testCalculateAverageWithDecimalResult() {
+        // Given
+        List<Integer> grades = Arrays.asList(1, 2, 3);
+        double expected = 2.0;
+
+        // When
+        double result = calculateAverage(grades);
+
+        // Then
+        assertEquals(expected, result, 0.1, "A média deve ser calculada corretamente com resultado decimal");
+    }
+
+    @Test
+    public void testCalculateAverageWithEmptyList() {
+        // Given
+        List<Integer> grades = Arrays.asList();
+        
+        // When & Then
+        assertThrows(UnsupportedOperationException.class, () -> {
+            calculateAverage(grades);
+        }, "Deve lançar exceção ao calcular média de lista vazia");
+    }
+
+    @Test
+    public void testCalculateAverageWithNegativeGrades() {
+        // Given
+        List<Integer> grades = Arrays.asList(-10, -5, 0, 5, 10);
+        double expected = 0.0;
+
+        // When
+        double result = calculateAverage(grades);
+
+        // Then
+        assertEquals(expected, result, 0.1, "A média deve ser calculada corretamente com notas negativas");
+    }
+
+    @Test
+    public void testCalculateAverageWithLargeNumbers() {
+        // Given
+        List<Integer> grades = Arrays.asList(100, 95, 98, 92);
+        double expected = 96.25;
+
+        // When
+        double result = calculateAverage(grades);
+
+        // Then
+        assertEquals(expected, result, 0.1, "A média deve ser calculada corretamente com números grandes");
+    }
+
+    @Test
+    public void testCalculateAverageWithRepeatedValues() {
+        // Given
+        List<Integer> grades = Arrays.asList(80, 80, 80, 80);
+        double expected = 80.0;
+
+        // When
+        double result = calculateAverage(grades);
+
+        // Then
+        assertEquals(expected, result, 0.1, "A média deve ser calculada corretamente com valores repetidos");
+    }
+
+    @Test
+    public void testCalculateAverageWithMixedPositiveAndNegative() {
+        // Given
+        List<Integer> grades = Arrays.asList(10, -5, 15, -10);
+        double expected = 2.5;
+
+        // When
+        double result = calculateAverage(grades);
+
+        // Then
+        assertEquals(expected, result, 0.1, "A média deve ser calculada corretamente com valores positivos e negativos");
+    }
+
+    // Método auxiliar para testar o método original
+    private double calculateAverage(List<Integer> grades) {
+        int sum = 0;
+        for (Integer grade : grades) {
+            sum += grade;
+        }
+        return sum / grades.size();
+    }
+}
+```
+
+**Melhorias sugeridas para o método original:**
+
+```java
+public double calculateAverage(List<Integer> grades) {
+    if (grades == null || grades.isEmpty()) {
+        throw new IllegalArgumentException("A lista de notas não pode ser nula ou vazia");
+    }
+    
+    int sum = 0;
+    for (Integer grade : grades) {
+        sum += grade;
+    }
+    return (double) sum / grades.size(); // Cast para double para evitar divisão inteira
+}
+```
+
+**Observações importantes:**
+
+1. **Divisão inteira**: O método original pode ter problemas com divisão inteira. Use `(double) sum / grades.size()` para garantir resultados decimais.
+
+2. **Tratamento de exceções**: O método atual lança `ArithmeticException` ao dividir por zero. É melhor validar antes.
+
+3. **Testes cobrem casos importantes**:
+   - Médias normais
+   - Lista vazia (com tratamento adequado)
+   - Valores extremos
+   - Números negativos
+   - Valores repetidos
+
+4. **Assertivas precisas**: Use `assertEquals(expected, result, delta)` para comparações de double.
+
+Esses testes garantem que o método funcione corretamente em diversos cenários e ajudam a manter a qualidade do código.
+
+2
+from ollama import chat
+
+cod="""
+public double calculateAverage(List<Integer> grades) {
+    int sum = 0;
+    for (Integer grade : grades) {
+        sum += grade;
+    }
+    return sum / grades.size();
+}
+"""
+response = chat(
+    model='qwen3-coder',
+    messages=[{'role': 'user', 'content': 
+    f"""
+
+Gerar documentação
+    {cod}
+    """}],
+)
+print(response.message.content)
+# Método calculateAverage
+
+## Descrição
+Calcula a média aritmética de uma lista de notas.
+
+## Assinatura
+```java
+public double calculateAverage(List<Integer> grades)
+```
+
+## Parâmetros
+| Parâmetro | Tipo | Descrição |
+|-----------|------|-----------|
+| `grades` | `List<Integer>` | Lista contendo as notas a serem calculadas |
+
+## Retorno
+- **Tipo:** `double`
+- **Descrição:** Média aritmética das notas fornecidas
+
+## Comportamento
+O método realiza os seguintes passos:
+1. Inicializa uma variável de soma com valor zero
+2. Itera por todas as notas da lista, somando cada uma delas
+3. Divide a soma total pelo número de notas para calcular a média
+4. Retorna o resultado como um valor do tipo `double`
+
+## Exceções
+- **NullPointerException:** Lançada caso o parâmetro `grades` seja `null`
+- **ArithmeticException:** Pode ocorrer se a lista estiver vazia (divisão por zero)
+
+## Exemplo de Uso
+```java
+List<Integer> notas = Arrays.asList(8, 7, 9, 6, 10);
+double media = calculateAverage(notas);
+System.out.println("Média: " + media); // Saída: Média: 8.0
+```
+
+## Observações
+- O método não realiza validações de valores negativos ou notas fora do intervalo válido (ex: 0-10)
+- Em caso de lista vazia, o método lançará uma `ArithmeticException` por divisão por zero
+- A implementação usa `grades.size()` para obter o número de elementos, o que pode ser otimizado para evitar chamadas repetidas ao método `size()` em listas grandes
+
+
