@@ -1,4 +1,3 @@
-# Análise de Código Java utilizando modelos locais
 
 # 1. Utilize os modelos DeepSeek Coder, StarCoder e Qwen Coder para analisar o seguinte código em Java.  
 
