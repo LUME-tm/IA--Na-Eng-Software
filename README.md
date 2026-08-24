@@ -1,46 +1,15 @@
 # Análise de Código Java utilizando LLMs
 
-## 1. Descrição da atividade
+## 1.
 
-Esta atividade tem como objetivo utilizar diferentes **Large Language Models (LLMs)** para realizar a análise de um código-fonte Java.
-
-Para isso, foi utilizado o **Ollama**, permitindo executar os modelos localmente e realizar perguntas sobre o código por meio de Python.
-
-Os modelos utilizados foram:
+modelos utilizados foram:
 
 * **DeepSeek-Coder**
 * **StarCoder**
 * **Qwen3-Coder**
 
-A mesma pergunta e o mesmo código Java foram utilizados nos testes, permitindo comparar as respostas fornecidas por cada modelo.
 
----
-
-## 2. Código Java analisado
-
-O código utilizado para realizar os testes foi:
-
-```java
-public String getUserInitials(String firstName, String lastName) {
-    return firstName.substring(0, 1).toUpperCase()
-            + lastName.substring(0, 1).toUpperCase();
-}
-```
-
-O método `getUserInitials` recebe o primeiro e o último nome de um usuário e retorna as iniciais em letras maiúsculas.
-
-Por exemplo:
-
-```text
-firstName = "John"
-lastName = "Smith"
-
-Resultado: JS
-```
-
----
-
-# 3. Atividade 1 — DeepSeek-Coder
+# DeepSeek-Coder
 
 ## Código utilizado
 
@@ -82,7 +51,7 @@ O **DeepSeek-Coder** considerou o código válido e não identificou problemas n
 
 ---
 
-# 4. Atividade 2 — StarCoder
+# StarCoder
 
 ## Código utilizado
 
@@ -170,7 +139,7 @@ Portanto, nesse teste, a resposta do StarCoder não foi adequada para a atividad
 
 ---
 
-# 5. Atividade 3 — Qwen3-Coder
+# Qwen3-Coder
 
 ## Código utilizado
 
