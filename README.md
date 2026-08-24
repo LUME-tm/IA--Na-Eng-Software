@@ -1,6 +1,13 @@
 # Análise de Código Java utilizando modelos locais
 
-# 1.
+# 1. Utilize os modelos DeepSeek Coder, StarCoder e Qwen Coder para analisar o seguinte código em Java.  
+
+Sugestão: resolver o exercício utilizando um modelo local via Ollama.  
+
+public String getUserInitials(String firstName, String lastName) {
+    return firstName.substring(0, 1).toUpperCase()
+            + lastName.substring(0, 1).toUpperCase();
+}
 
 modelos utilizados foram:
 
