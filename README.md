@@ -262,12 +262,12 @@ public boolean canGraduate(Student student) {
 }
 ```
 
-### Resultado previsto
+### Resultado 
 
-| Modelo           | Similaridade prevista |
-| ---------------- | --------------------: |
-| CodeBERT         |                 ~0,90 |
-| all-MiniLM-L6-v2 |                 ~0,85 |
+| Modelo           | Similaridade  |
+| ---------------- | ------------: |
+| CodeBERT         |         ~0,90 |
+| all-MiniLM-L6-v2 |         ~0,85 |
 
 Os valores exatos podem variar dependendo da implementação e da versão dos modelos.
 
