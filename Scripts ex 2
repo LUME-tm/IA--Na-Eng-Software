@@ -1,0 +1,127 @@
+from transformers import AutoTokenizer, AutoModel
+from sentence_transformers import SentenceTransformer
+from sklearn.metrics.pairwise import cosine_similarity
+import torch
+
+
+# ============================================================
+# CÓDIGOS QUE SERÃO COMPARADOS
+# ============================================================
+
+codigo1 = """
+public boolean canEnroll(Student student) {
+    return student.isActive()
+            && student.getCompletedCredits() >= 120;
+}
+"""
+
+codigo2 = """
+public boolean canGraduate(Student student) {
+    if (student.isActive() && student.getCompletedCredits() >= 120) {
+        return true;
+    }
+    return false;
+}
+"""
+
+
+# ============================================================
+# CODEBERT
+# ============================================================
+
+print("Carregando CodeBERT...")
+
+tokenizer = AutoTokenizer.from_pretrained("microsoft/codebert-base")
+model = AutoModel.from_pretrained("microsoft/codebert-base")
+
+
+def gerar_embedding_codebert(codigo):
+    tokens = tokenizer(
+        codigo,
+        return_tensors="pt",
+        truncation=True,
+        padding=True
+    )
+
+    with torch.no_grad():
+        saida = model(**tokens)
+
+    # Calcula a média dos embeddings dos tokens
+    embedding = saida.last_hidden_state.mean(dim=1)
+
+    return embedding.numpy()
+
+
+embedding1_codebert = gerar_embedding_codebert(codigo1)
+embedding2_codebert = gerar_embedding_codebert(codigo2)
+
+similaridade_codebert = cosine_similarity(
+    embedding1_codebert,
+    embedding2_codebert
+)[0][0]
+
+
+# ============================================================
+# ALL-MINILM-L6-V2
+# ============================================================
+
+print("Carregando all-MiniLM-L6-v2...")
+
+modelo_minilm = SentenceTransformer(
+    "sentence-transformers/all-MiniLM-L6-v2"
+)
+
+embedding1_minilm = modelo_minilm.encode(codigo1)
+embedding2_minilm = modelo_minilm.encode(codigo2)
+
+similaridade_minilm = cosine_similarity(
+    [embedding1_minilm],
+    [embedding2_minilm]
+)[0][0]
+
+
+# ============================================================
+# RESULTADOS
+# ============================================================
+
+print("\n======================================")
+print("RESULTADOS")
+print("======================================")
+
+print(
+    "Similaridade CodeBERT:",
+    round(similaridade_codebert, 4)
+)
+
+print(
+    "Similaridade all-MiniLM-L6-v2:",
+    round(similaridade_minilm, 4)
+)
+
+
+# ============================================================
+# ANÁLISE
+# ============================================================
+
+print("\n======================================")
+print("ANÁLISE")
+print("======================================")
+
+media = (
+    similaridade_codebert +
+    similaridade_minilm
+) / 2
+
+print(
+    "Similaridade média:",
+    round(media, 4)
+)
+
+if media >= 0.70:
+    print("\nExiste duplicação de lógica.")
+    print(
+        "Os dois trechos possuem alta similaridade "
+        "e implementam a mesma regra de negócio."
+    )
+else:
+    print("\nNão foi identificada duplicação significativa.")
