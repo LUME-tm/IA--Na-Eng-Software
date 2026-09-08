@@ -238,7 +238,7 @@ public String getUserInitials(String firstName, String lastName) {
             .orElse("");
 }
 ```
-# Comparação de Modelos de IA para Código
+# Exercicio 2
 
 ## 1. CodeBERT e all-MiniLM-L6-v2 — Detecção de duplicação de lógica
 
@@ -269,7 +269,7 @@ public boolean canGraduate(Student student) {
 | CodeBERT         |         ~0,90 |
 | all-MiniLM-L6-v2 |         ~0,85 |
 
-Os valores exatos podem variar dependendo da implementação e da versão dos modelos.
+
 
 ### Análise
 
