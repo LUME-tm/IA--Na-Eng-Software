@@ -380,4 +380,7 @@ System.out.println("Média: " + media); // Saída: Média: 8.0
 - Em caso de lista vazia, o método lançará uma `ArithmeticException` por divisão por zero
 - A implementação usa `grades.size()` para obter o número de elementos, o que pode ser otimizado para evitar chamadas repetidas ao método `size()` em listas grandes
 
+Starcorder alucinou e nao mandou nada
+
+
 
