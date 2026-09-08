@@ -238,3 +238,197 @@ public String getUserInitials(String firstName, String lastName) {
             .orElse("");
 }
 ```
+# Comparação de Modelos de IA para Código
+
+## 1. CodeBERT e all-MiniLM-L6-v2 — Detecção de duplicação de lógica
+
+### Código 1
+
+```java
+public boolean canEnroll(Student student) {
+    return student.isActive()
+            && student.getCompletedCredits() >= 120;
+}
+```
+
+### Código 2
+
+```java
+public boolean canGraduate(Student student) {
+    if (student.isActive() && student.getCompletedCredits() >= 120) {
+        return true;
+    }
+    return false;
+}
+```
+
+### Resultado previsto
+
+| Modelo           | Similaridade prevista |
+| ---------------- | --------------------: |
+| CodeBERT         |                 ~0,90 |
+| all-MiniLM-L6-v2 |                 ~0,85 |
+
+Os valores exatos podem variar dependendo da implementação e da versão dos modelos.
+
+### Análise
+
+Os dois modelos devem apresentar uma similaridade elevada, pois os dois trechos implementam essencialmente a mesma regra de negócio.
+
+Ambos verificam:
+
+```java
+student.isActive()
+```
+
+e:
+
+```java
+student.getCompletedCredits() >= 120
+```
+
+A principal diferença está apenas na estrutura do código. O primeiro método retorna diretamente a expressão booleana, enquanto o segundo utiliza uma estrutura `if` para retornar `true` ou `false`.
+
+### Conclusão
+
+Existe **duplicação de lógica de negócio** entre os dois métodos. Apesar de os métodos possuírem nomes diferentes (`canEnroll` e `canGraduate`), a regra utilizada para determinar o resultado é a mesma.
+
+Uma possível solução seria centralizar essa regra em um único método ou componente, evitando que ela seja implementada em vários locais do sistema.
+
+---
+
+# 2. Comparação entre DeepSeek Coder, Qwen3 Coder e StarCoder
+
+Para esta etapa, foi utilizado o mesmo código Java:
+
+```java
+public double calculateAverage(List<Integer> grades) {
+    int sum = 0;
+    for (Integer grade : grades) {
+        sum += grade;
+    }
+    return sum / grades.size();
+}
+```
+
+Foram solicitadas duas tarefas aos modelos:
+
+1. Gerar testes automatizados;
+2. Gerar documentação.
+
+---
+
+## 2.1 DeepSeek Coder
+
+### Testes automatizados
+
+O DeepSeek Coder gerou testes utilizando JUnit, incluindo:
+
+* Lista vazia;
+* Lista com uma nota;
+* Lista com várias notas;
+* Valores negativos.
+
+Também explicou o funcionamento de `assertEquals`, `assertThrows` e do parâmetro de tolerância `0.001`.
+
+### Documentação
+
+O modelo apresentou uma documentação em Markdown contendo:
+
+* Descrição do método;
+* Parâmetro `grades`;
+* Tipo de retorno;
+* Exemplos de utilização;
+* Descrição da classe;
+* Detalhes adicionais.
+
+### Avaliação
+
+O DeepSeek Coder conseguiu realizar as duas tarefas solicitadas, porém sua resposta foi relativamente simples e apresentou algumas explicações imprecisas.
+
+---
+
+# 2.2 Qwen3 Coder
+
+### Testes automatizados
+
+O Qwen3 Coder apresentou uma quantidade maior de testes, incluindo:
+
+* Notas normais;
+* Uma única nota;
+* Notas iguais a zero;
+* Resultado decimal;
+* Lista vazia;
+* Notas negativas;
+* Números grandes;
+* Valores repetidos;
+* Valores positivos e negativos.
+
+Além disso, identificou um problema importante no código original:
+
+```java
+return sum / grades.size();
+```
+
+Como `sum` e `grades.size()` são inteiros, a divisão pode ocorrer como divisão inteira.
+
+O modelo sugeriu:
+
+```java
+return (double) sum / grades.size();
+```
+
+para preservar o resultado decimal.
+
+Também sugeriu validar listas nulas ou vazias antes de realizar o cálculo.
+
+### Documentação
+
+A documentação gerada pelo Qwen3 Coder foi mais estruturada, apresentando:
+
+* Descrição;
+* Assinatura;
+* Parâmetros;
+* Retorno;
+* Comportamento;
+* Exceções;
+* Exemplo de uso;
+* Observações.
+
+### Avaliação
+
+Entre os dois modelos, o **Qwen3 Coder apresentou a resposta mais completa**, principalmente por identificar o problema da divisão inteira e sugerir uma melhoria para o código.
+
+---
+
+# 2.3 StarCoder
+
+### Resultado
+
+O StarCoder **não apresentou uma resposta utilizável** para as solicitações realizadas.
+
+Não foi possível obter uma resposta contendo os testes automatizados ou a documentação solicitada.
+
+### Avaliação
+
+Dessa forma, o StarCoder não conseguiu atender às tarefas propostas nesta execução.
+
+---
+
+# 3. Comparação geral
+
+| Modelo         | Testes automatizados | Documentação | Identificou problema no código | Resultado geral |
+| -------------- | -------------------- | ------------ | ------------------------------ | --------------- |
+| DeepSeek Coder | Sim                  | Sim          | Não de forma adequada          | Bom             |
+| Qwen3 Coder    | Sim                  | Sim          | Sim                            | **Muito bom**   |
+| StarCoder      | Não                  | Não          | Não                            | Insatisfatório  |
+
+## Conclusão
+
+Entre os modelos avaliados para geração de testes automatizados e documentação, o **Qwen3 Coder apresentou o melhor resultado**, pois forneceu uma quantidade maior de testes, uma documentação mais organizada e ainda identificou um problema relacionado à divisão inteira no método original.
+
+O **DeepSeek Coder** também conseguiu realizar as tarefas, porém apresentou respostas menos completas.
+
+O **StarCoder**, nesta execução, não forneceu uma resposta para as tarefas solicitadas, portanto não foi possível realizar uma avaliação positiva de seu desempenho.
+
+Já na tarefa de detecção de duplicação de lógica, tanto o **CodeBERT** quanto o **all-MiniLM-L6-v2** devem apresentar alta similaridade entre os dois métodos, indicando que existe duplicação da mesma regra de negócio, mesmo que os códigos tenham estruturas sintáticas diferentes.
