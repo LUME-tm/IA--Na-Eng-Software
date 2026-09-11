@@ -1,0 +1,191 @@
+codigo
+import os
+from groq import Groq
+
+client = Groq(
+    api_key=os.environ.get("GROQ_API_KEY")
+)
+
+codigo = """
+public String getUserInitials(String firstName, String lastName) {
+    return firstName.substring(0, 1).toUpperCase()
+        + lastName.substring(0, 1).toUpperCase();
+}
+"""
+
+perguntas = [
+    f"""
+Analise o seguinte código Java:
+
+{codigo}
+
+Identifique possíveis problemas, erros ou exceções que podem
+acontecer. Explique detalhadamente.
+""",
+
+    f"""
+Analise o seguinte código Java:
+
+{codigo}
+
+Corrija os possíveis problemas encontrados e explique as
+alterações realizadas.
+
+Código corrigido:
+"""
+]
+
+modelos = [
+    "openai/gpt-oss-120b",
+    "qwen/qwen3-32b"
+]
+
+for modelo in modelos:
+    print("=" * 60)
+    print("MODELO:", modelo)
+    print("=" * 60)
+
+    for i, pergunta in enumerate(perguntas, 1):
+        resposta = client.chat.completions.create(
+            model=modelo,
+            messages=[
+                {
+                    "role": "user",
+                    "content": pergunta
+                }
+            ]
+        )
+
+        print(f"\n--- Questão 1.{i} ---")
+        print(resposta.choices[0].message.content)
+
+import os
+from groq import Groq
+
+client = Groq(
+    api_key=os.environ.get("GROQ_API_KEY")
+)
+
+codigo = """
+public double calculateAverage(List<Integer> grades) {
+    int sum = 0;
+    for (Integer grade : grades) {
+        sum += grade;
+    }
+    return sum / grades.size();
+}
+"""
+
+perguntas = [
+    f"""
+Analise o seguinte código Java:
+
+{codigo}
+
+Crie testes automatizados utilizando JUnit.
+
+Considere:
+- casos normais;
+- lista vazia;
+- valores negativos;
+- resultado com casas decimais;
+- outros casos extremos que considerar importantes.
+
+Explique cada teste.
+""",
+
+    f"""
+Analise o seguinte código Java:
+
+{codigo}
+
+Crie uma documentação JavaDoc completa para esse método.
+
+A documentação deve explicar:
+- objetivo do método;
+- parâmetro;
+- retorno;
+- possíveis exceções;
+- comportamento para entradas inválidas.
+"""
+]
+
+modelos = [
+    "openai/gpt-oss-120b",
+    "qwen/qwen3-32b"
+]
+
+for modelo in modelos:
+    print("=" * 60)
+    print("MODELO:", modelo)
+    print("=" * 60)
+
+    for i, pergunta in enumerate(perguntas, 1):
+        resposta = client.chat.completions.create(
+            model=modelo,
+            messages=[
+                {
+                    "role": "user",
+                    "content": pergunta
+                }
+            ]
+        )
+
+        print(f"\n--- Questão 3.{i} ---")
+        print(resposta.choices[0].message.content)
+
+testes
+
+import static org.junit.jupiter.api.Assertions.*;
+
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.List;
+
+import org.junit.jupiter.api.Test;
+
+public class AverageTest {
+
+    private final Average average = new Average();
+
+    @Test
+    void shouldCalculateAverage() {
+
+        List<Integer> grades = Arrays.asList(7, 8, 9);
+
+        double result = average.calculateAverage(grades);
+
+        assertEquals(8.0, result);
+    }
+
+    @Test
+    void shouldCalculateDecimalAverage() {
+
+        List<Integer> grades = Arrays.asList(7, 8);
+
+        double result = average.calculateAverage(grades);
+
+        assertEquals(7.5, result);
+    }
+
+    @Test
+    void shouldRejectEmptyList() {
+
+        List<Integer> grades = Collections.emptyList();
+
+        assertThrows(
+            IllegalArgumentException.class,
+            () -> average.calculateAverage(grades)
+        );
+    }
+
+    @Test
+    void shouldCalculateNegativeValues() {
+
+        List<Integer> grades = Arrays.asList(-2, -4, -6);
+
+        double result = average.calculateAverage(grades);
+
+        assertEquals(-4.0, result);
+    }
+}
