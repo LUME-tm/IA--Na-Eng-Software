@@ -297,7 +297,7 @@ Uma possível solução seria centralizar essa regra em um único método ou com
 
 ---
 
-# 2. Comparação entre DeepSeek Coder, Qwen3 Coder e StarCoder
+# 3. Comparação entre DeepSeek Coder, Qwen3 Coder e StarCoder
 
 Para esta etapa, foi utilizado o mesmo código Java:
 
