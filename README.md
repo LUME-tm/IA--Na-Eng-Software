@@ -435,47 +435,52 @@ Já na tarefa de detecção de duplicação de lógica, tanto o **CodeBERT** qua
 
 # lista 3
 
+# Exercícios — Modelos Remotos do Groq
+
 ## Modelos utilizados
 
+- `qwen/qwen3.6-27b`
 - `openai/gpt-oss-120b`
-- `qwen/qwen3-32b`
 
 ---
 
-# Exercício 1
+# Exercício 1 — Análise e correção de código
 
-## 1.1 — Análise do código
+## Código fornecido
 
-### GPT-OSS
+```java
+public String getUserInitials(String firstName, String lastName) {
+    return firstName.substring(0, 1).toUpperCase()
+        + lastName.substring(0, 1).toUpperCase();
+}
+```
 
-O código funciona corretamente quando `firstName` e `lastName` possuem pelo menos um caractere. Porém, existem alguns casos que podem causar problemas.
+## 1.1 — Existe algum possível problema no código em Java?
 
-Se `firstName` ou `lastName` forem `null`, ocorrerá uma `NullPointerException`.
+### Resposta do Qwen3.6-27B
 
-Também existe um problema caso uma das strings seja vazia (`""`). Nesse caso, `substring(0, 1)` causará uma `StringIndexOutOfBoundsException`.
+Sim. O código funciona quando `firstName` e `lastName` possuem valores válidos, porém existem algumas situações que podem causar erros.
 
-Portanto, o código deveria verificar se os nomes são nulos ou vazios antes de utilizar `substring`.
+Se `firstName` ou `lastName` forem `null`, a chamada de `substring()` causará uma `NullPointerException`.
 
-### Qwen
+Também existe um problema quando uma das strings está vazia. Nesse caso, não existe um primeiro caractere para ser obtido com `substring(0, 1)`.
 
-O método pode apresentar exceções dependendo dos valores recebidos.
+### Resposta do GPT-OSS-120B
 
-Os principais problemas são:
+Sim. O código possui possíveis problemas de validação de entrada.
 
-- `firstName == null` → `NullPointerException`;
-- `lastName == null` → `NullPointerException`;
-- `firstName.isEmpty()` → erro ao executar `substring(0, 1)`;
-- `lastName.isEmpty()` → erro ao executar `substring(0, 1)`.
+Os principais casos são:
 
-Uma validação dos parâmetros deve ser adicionada para tornar o método mais seguro.
+- `firstName == null`: pode causar `NullPointerException`;
+- `lastName == null`: pode causar `NullPointerException`;
+- `firstName` vazio: `substring(0, 1)` não pode obter um caractere inexistente;
+- `lastName` vazio: ocorre o mesmo problema.
 
 ---
 
-## 1.2 — Correção do código
+# 1.2 — Corrija o código
 
-### GPT-OSS
-
-Uma possível correção é:
+### Resposta do Qwen3.6-27B
 
 ```java
 public String getUserInitials(String firstName, String lastName) {
@@ -490,3 +495,273 @@ public String getUserInitials(String firstName, String lastName) {
     return firstName.substring(0, 1).toUpperCase()
         + lastName.substring(0, 1).toUpperCase();
 }
+```
+
+### Resposta do GPT-OSS-120B
+
+```java
+public String getUserInitials(String firstName, String lastName) {
+    if (firstName == null || firstName.isBlank()) {
+        throw new IllegalArgumentException("First name cannot be empty");
+    }
+
+    if (lastName == null || lastName.isBlank()) {
+        throw new IllegalArgumentException("Last name cannot be empty");
+    }
+
+    return firstName.substring(0, 1).toUpperCase()
+        + lastName.substring(0, 1).toUpperCase();
+}
+```
+
+---
+
+# Exercício 3 — Testes automatizados e documentação
+
+## Código fornecido
+
+```java
+public double calculateAverage(List<Integer> grades) {
+    int sum = 0;
+    for (Integer grade : grades) {
+        sum += grade;
+    }
+    return sum / grades.size();
+}
+```
+
+# 3.1 — Gerar testes automatizados
+
+## Resposta do Qwen3.6-27B
+
+### Média normal
+
+```java
+@Test
+void shouldCalculateAverage() {
+    List<Integer> grades = Arrays.asList(7, 8, 9);
+
+    double result = calculateAverage(grades);
+
+    assertEquals(8.0, result);
+}
+```
+
+### Média decimal
+
+```java
+@Test
+void shouldCalculateDecimalAverage() {
+    List<Integer> grades = Arrays.asList(7, 8);
+
+    double result = calculateAverage(grades);
+
+    assertEquals(7.5, result);
+}
+```
+
+### Lista vazia
+
+```java
+@Test
+void shouldRejectEmptyList() {
+    List<Integer> grades = Collections.emptyList();
+
+    assertThrows(
+        IllegalArgumentException.class,
+        () -> calculateAverage(grades)
+    );
+}
+```
+
+### Valores negativos
+
+```java
+@Test
+void shouldCalculateNegativeValues() {
+    List<Integer> grades = Arrays.asList(-2, -4, -6);
+
+    double result = calculateAverage(grades);
+
+    assertEquals(-4.0, result);
+}
+```
+
+O modelo também identificou o problema da divisão inteira:
+
+```java
+return sum / grades.size();
+```
+
+A correção é:
+
+```java
+return (double) sum / grades.size();
+```
+
+## Resposta do GPT-OSS-120B
+
+### Média normal
+
+```java
+@Test
+void shouldCalculateAverage() {
+    List<Integer> grades = Arrays.asList(7, 8, 9);
+
+    double result = calculateAverage(grades);
+
+    assertEquals(8.0, result);
+}
+```
+
+### Média decimal
+
+```java
+@Test
+void shouldCalculateDecimalAverage() {
+    List<Integer> grades = Arrays.asList(7, 8);
+
+    double result = calculateAverage(grades);
+
+    assertEquals(7.5, result);
+}
+```
+
+### Lista vazia
+
+```java
+@Test
+void shouldRejectEmptyList() {
+    List<Integer> grades = Collections.emptyList();
+
+    assertThrows(
+        IllegalArgumentException.class,
+        () -> calculateAverage(grades)
+    );
+}
+```
+
+### Valores negativos
+
+```java
+@Test
+void shouldCalculateNegativeValues() {
+    List<Integer> grades = Arrays.asList(-2, -4, -6);
+
+    double result = calculateAverage(grades);
+
+    assertEquals(-4.0, result);
+}
+```
+
+O GPT-OSS-120B também identificou o problema da divisão inteira e recomendou:
+
+```java
+return (double) sum / grades.size();
+```
+
+---
+
+# 3.2 — Gerar documentação
+
+## Resposta do Qwen3.6-27B
+
+```java
+/**
+ * Calculates the arithmetic average of the provided grades.
+ *
+ * @param grades list of integer grades
+ * @return the arithmetic average of the grades
+ * @throws IllegalArgumentException if grades is null or empty
+ */
+public double calculateAverage(List<Integer> grades) {
+    if (grades == null || grades.isEmpty()) {
+        throw new IllegalArgumentException("Grades cannot be null or empty");
+    }
+
+    int sum = 0;
+
+    for (Integer grade : grades) {
+        sum += grade;
+    }
+
+    return (double) sum / grades.size();
+}
+```
+
+## Resposta do GPT-OSS-120B
+
+```java
+/**
+ * Calculates the arithmetic average of a list of grades.
+ *
+ * @param grades list containing the grades to be averaged
+ * @return the arithmetic average of the grades
+ * @throws IllegalArgumentException if the list is null or empty
+ */
+public double calculateAverage(List<Integer> grades) {
+    if (grades == null || grades.isEmpty()) {
+        throw new IllegalArgumentException("Grades cannot be null or empty");
+    }
+
+    int sum = 0;
+
+    for (Integer grade : grades) {
+        sum += grade;
+    }
+
+    return (double) sum / grades.size();
+}
+```
+
+---
+
+# Comparação entre os modelos
+
+## Exercício 1
+
+Os dois modelos identificaram problemas semelhantes:
+
+- possibilidade de `NullPointerException`;
+- problemas com strings vazias;
+- necessidade de validar os parâmetros;
+- necessidade de tratar entradas inválidas.
+
+As soluções propostas também foram semelhantes, utilizando `isBlank()` e `IllegalArgumentException`.
+
+## Exercício 3
+
+Os dois modelos identificaram o problema da divisão inteira:
+
+```java
+return sum / grades.size();
+```
+
+A correção proposta foi:
+
+```java
+return (double) sum / grades.size();
+```
+
+Os dois modelos também criaram testes para:
+
+- valores normais;
+- resultados decimais;
+- lista vazia;
+- valores negativos.
+
+Além disso, ambos forneceram documentação JavaDoc.
+
+---
+
+# Conclusão
+
+Os modelos Qwen3.6-27B e GPT-OSS-120B conseguiram analisar os códigos Java apresentados nos exercícios.
+
+No Exercício 1, ambos identificaram problemas relacionados a valores `null` e strings vazias.
+
+No Exercício 3, ambos identificaram o problema da divisão inteira e forneceram soluções para corrigi-lo.
+
+Também foram gerados testes automatizados e documentação JavaDoc.
+
+A utilização de modelos de Inteligência Artificial mostrou-se útil como ferramenta de apoio ao desenvolvimento de software, principalmente para análise de código, identificação de erros, criação de testes e documentação.
