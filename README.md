@@ -432,3 +432,61 @@ O **DeepSeek Coder** também conseguiu realizar as tarefas, porém apresentou re
 O **StarCoder**, nesta execução, não forneceu uma resposta para as tarefas solicitadas, portanto não foi possível realizar uma avaliação positiva de seu desempenho.
 
 Já na tarefa de detecção de duplicação de lógica, tanto o **CodeBERT** quanto o **all-MiniLM-L6-v2** devem apresentar alta similaridade entre os dois métodos, indicando que existe duplicação da mesma regra de negócio, mesmo que os códigos tenham estruturas sintáticas diferentes.
+
+# lista 3
+
+## Modelos utilizados
+
+- `openai/gpt-oss-120b`
+- `qwen/qwen3-32b`
+
+---
+
+# Exercício 1
+
+## 1.1 — Análise do código
+
+### GPT-OSS
+
+O código funciona corretamente quando `firstName` e `lastName` possuem pelo menos um caractere. Porém, existem alguns casos que podem causar problemas.
+
+Se `firstName` ou `lastName` forem `null`, ocorrerá uma `NullPointerException`.
+
+Também existe um problema caso uma das strings seja vazia (`""`). Nesse caso, `substring(0, 1)` causará uma `StringIndexOutOfBoundsException`.
+
+Portanto, o código deveria verificar se os nomes são nulos ou vazios antes de utilizar `substring`.
+
+### Qwen
+
+O método pode apresentar exceções dependendo dos valores recebidos.
+
+Os principais problemas são:
+
+- `firstName == null` → `NullPointerException`;
+- `lastName == null` → `NullPointerException`;
+- `firstName.isEmpty()` → erro ao executar `substring(0, 1)`;
+- `lastName.isEmpty()` → erro ao executar `substring(0, 1)`.
+
+Uma validação dos parâmetros deve ser adicionada para tornar o método mais seguro.
+
+---
+
+## 1.2 — Correção do código
+
+### GPT-OSS
+
+Uma possível correção é:
+
+```java
+public String getUserInitials(String firstName, String lastName) {
+    if (firstName == null || firstName.isBlank()) {
+        throw new IllegalArgumentException("First name cannot be empty");
+    }
+
+    if (lastName == null || lastName.isBlank()) {
+        throw new IllegalArgumentException("Last name cannot be empty");
+    }
+
+    return firstName.substring(0, 1).toUpperCase()
+        + lastName.substring(0, 1).toUpperCase();
+}
